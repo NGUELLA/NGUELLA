@@ -1,0 +1,18 @@
+# Lancer le script
+sudo ./clone_devops_complet.sh
+
+# Dans le menu, choisir option : 1
+# Le script va automatiquement sauvegarder :
+#   ✓ Jenkins (jobs, pipelines, credentials)
+#   ✓ Nexus (repositories, artifacts)
+#   ✓ SonarQube (projets, analyses)
+#   ✓ Docker (images, configs)
+#   ✓ Kubernetes Master (configs, état, manifests)
+
+# Durée estimée : 10-30 minutes (selon la taille des données)
+# Écran de fin ressemblera à :
+#   ================================================
+#   ✓ SAUVEGARDE COMPLÈTE TERMINÉE
+#   ================================================
+#   Localisation de l'archive:
+#   /backup/devops_backup_complet_20251203_154523.tar.gz

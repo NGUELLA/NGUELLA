@@ -1,0 +1,16 @@
+# 1. Se connecter à VM1
+ssh credix@192.168.2.115
+
+# 2. Créer le fichier script
+nano clone_devops_complet.sh
+
+# 3. Copier TOUT le contenu du script que tu as téléchargé
+# (Appuyer sur Shift+Insert ou Ctrl+Shift+V pour coller)
+
+# 4. Quitter nano (Ctrl+X, puis Y, puis Entrée)
+
+# 5. Rendre exécutable
+chmod +x clone_devops_complet.sh
+
+# Vérifier que le script est bien là
+ls -la clone_devops_complet.sh

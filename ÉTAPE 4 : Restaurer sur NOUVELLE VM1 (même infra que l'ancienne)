@@ -1,0 +1,27 @@
+# Se connecter à la nouvelle VM1
+ssh user@10.0.1.115
+
+# AVANT TOUT : Installer les prérequis sur la nouvelle VM
+# (Docker, Kubernetes, Jenkins, SonarQube, Nexus doivent être installés en premier)
+
+# Créer le script
+nano clone_devops_complet.sh
+# Copier le contenu du script
+
+chmod +x clone_devops_complet.sh
+
+# Lancer le script
+sudo ./clone_devops_complet.sh
+
+# Dans le menu, choisir option : 2
+# Entrer le chemin complet du fichier :
+#   /tmp/devops_backup_complet_20251203_154523.tar.gz
+
+# Le script va automatiquement restaurer TOUT :
+#   ✓ Jenkins avec tous les jobs, pipelines, credentials
+#   ✓ Nexus avec tous les repositories et artifacts
+#   ✓ SonarQube avec tous les projets et analyses
+#   ✓ Docker avec images
+#   ✓ Kubernetes avec tous les deployments et manifests
+
+# Durée estimée : 15-45 minutes

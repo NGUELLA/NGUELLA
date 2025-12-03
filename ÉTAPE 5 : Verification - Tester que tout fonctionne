@@ -1,0 +1,22 @@
+# Sur la nouvelle VM1, vérifier :
+
+# 1. Jenkins
+curl http://localhost:8080
+# Devrait retourner la page Jenkins
+
+# 2. SonarQube
+curl http://localhost:9000
+# Devrait retourner SonarQube
+
+# 3. Nexus
+curl http://localhost:8081
+# Devrait retourner Nexus
+
+# 4. Kubernetes
+kubectl get nodes
+kubectl get pods -A
+# Devrait afficher master + workers
+
+# 5. Docker
+docker ps
+# Devrait afficher Jenkins, SonarQube, Nexus, etc

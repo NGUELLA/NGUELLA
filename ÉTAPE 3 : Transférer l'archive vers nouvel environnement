@@ -1,0 +1,11 @@
+# Récupérer le nom exact du fichier
+ls -lh /backup/devops_backup_complet_*.tar.gz
+
+# Copier vers ta nouvelle infrastructure
+# (Depuis ton PC ou un serveur intermédiaire)
+
+# Exemple (supposons nouvelle VM1 à 10.0.1.115) :
+scp credix@192.168.2.115:/backup/devops_backup_complet_*.tar.gz /tmp/
+
+# Ou directement vers nouvelle VM
+scp /tmp/devops_backup_complet_*.tar.gz user@10.0.1.115:/tmp/

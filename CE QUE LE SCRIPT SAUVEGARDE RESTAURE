@@ -1,0 +1,7 @@
+Composant            	Ce qui est cloné
+Jenkins	              Jobs, pipelines, credentials, secrets, plugins, config globale
+Nexus	                Repositories, artifacts, configurations
+SonarQube	            Projets, analyses, configurations, qualité de code
+Docker	              Images (Jenkins, SonarQube, Nexus), configs Docker
+Kubernetes	          Configs master, kubeconfig, etcd, tous les manifests, deployments, services, PVCs, secrets
+Réseau	              Netplan, hostname, hosts

@@ -1,0 +1,9 @@
+# Si tu changes les IPs de ta nouvelle VM (ex: 10.0.1.115)
+sudo ./clone_devops_complet.sh
+
+# Choisir option : 3
+# Entrer :
+#   Ancienne IP: 192.168.2.115
+#   Nouvelle IP: 10.0.1.115
+
+# Le script met à jour automatiquement partout (Kubernetes, Jenkins, Netplan, etc)

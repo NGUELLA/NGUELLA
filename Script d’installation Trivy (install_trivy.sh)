@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e
+
+echo "[INFO] Installation des prérequis..."
+sudo apt-get update -y
+sudo apt-get install -y curl wget
+
+echo "[INFO] Récupération de la dernière version de Trivy..."
+TRIVY_VERSION=$(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest \
+  | grep -Po '"tag_name": "v\K[0-9.]+' )
+
+echo "[INFO] Dernière version détectée : ${TRIVY_VERSION}"
+
+echo "[INFO] Téléchargement de Trivy..."
+wget -qO trivy.tar.gz \
+  "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
+
+echo "[INFO] Installation de Trivy..."
+sudo tar xf trivy.tar.gz -C /usr/local/bin trivy
+rm -f trivy.tar.gz
+
+sudo chmod +x /usr/local/bin/trivy
+
+echo "[INFO] Trivy installé. Version : $(trivy --version)"

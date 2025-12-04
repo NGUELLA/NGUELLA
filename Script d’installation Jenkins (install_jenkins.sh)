@@ -1,0 +1,41 @@
+#!/bin/bash
+set -e
+
+echo "[INFO] Mise à jour du système..."
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+echo "[INFO] Installation de Java (OpenJDK 17)..."
+sudo apt-get install -y fontconfig openjdk-17-jre
+
+echo "[INFO] Vérification de Java..."
+java -version
+
+echo "[INFO] Création du répertoire de clé Jenkins..."
+sudo mkdir -p /etc/apt/keyrings
+
+echo "[INFO] Téléchargement de la clé GPG Jenkins..."
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+
+echo "[INFO] Ajout du dépôt Jenkins (debian-stable)..."
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc] \
+https://pkg.jenkins.io/debian-stable binary/" | sudo tee \
+/etc/apt/sources.list.d/jenkins.list > /dev/null
+
+echo "[INFO] Mise à jour des dépôts..."
+sudo apt-get update -y
+
+echo "[INFO] Installation de Jenkins..."
+sudo apt-get install -y jenkins
+
+echo "[INFO] Activation et démarrage du service Jenkins..."
+sudo systemctl enable jenkins
+sudo systemctl start jenkins
+
+echo
+echo "[INFO] Jenkins est installé et écoute sur le port 8080."
+echo "[INFO] Mot de passe initial :"
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+echo
+echo "[INFO] Ouvre http://<IP_SERVEUR>:8080 dans ton navigateur pour terminer la configuration."

@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+
+echo "[INFO] Mise à jour du système..."
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+echo "[INFO] Installation de Docker (dernière stable)..."
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+echo "[INFO] Ajout de l'utilisateur courant au groupe docker..."
+sudo usermod -aG docker "$USER"
+
+echo "[INFO] Activation du service Docker..."
+sudo systemctl enable docker
+sudo systemctl start docker
+
+echo "[INFO] Docker installé. Déconnecte-toi / reconnecte-toi pour utiliser docker sans sudo."

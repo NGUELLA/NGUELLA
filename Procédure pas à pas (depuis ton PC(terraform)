@@ -1,0 +1,57 @@
+Étape 0 – Pré-requis sur ton PC
+Installer :
+
+Terraform,
+
+AWS CLI (aws configure avec ton access key / secret),
+
+Ansible (pip install ansible),
+
+collection Docker : ansible-galaxy collection install community.docker.
+​
+
+Étape 1 – Créer la structure
+bash
+mkdir -p devops-platform/terraform
+mkdir -p devops-platform/ansible/roles/{common,jenkins,sonarqube,nexus,kubernetes}/tasks
+Copier les fichiers ci‑dessus dans les bons dossiers.
+
+Étape 2 – Provisionner avec Terraform
+bash
+cd devops-platform/terraform
+terraform init
+terraform plan
+terraform apply -var="preprod_state=running"
+À la fin, note les IP affichées (outputs).
+
+Étape 3 – Remplir l’inventaire Ansible
+bash
+cd ../ansible
+nano hosts.ini   # ou autre éditeur
+Remplace JENKINS_PUBLIC_IP, etc., par les vraies IP.
+
+Étape 4 – Test SSH avec Ansible
+bash
+ansible -i hosts.ini all -m ping
+Si ça répond “pong” c’est bon.
+
+Étape 5 – Configurer les serveurs avec Ansible
+bash
+ansible-playbook -i hosts.ini site.yml
+Jenkins : http://IP_JENKINS:8080
+
+SonarQube : http://IP_SONAR:9000
+
+Nexus : http://IP_NEXUS:8081
+
+K8s : ssh ubuntu@IP_MASTER puis kubectl get nodes (avec /home/ubuntu/.kube/config).
+​
+
+Étape 6 – Éteindre la préproduction quand tu as fini
+Depuis terraform/ :
+
+bash
+terraform apply -var="preprod_state=stopped"
+Les instances passent en “stopped” (préprod non allumée en permanence, comme demandé par le DT).
+​
+

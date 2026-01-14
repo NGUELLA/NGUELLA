@@ -1,0 +1,20 @@
+devops-platform/
+├── terraform/
+│   ├── main.tf
+│   ├── variables.tf
+│   └── outputs.tf
+└── ansible/
+    ├── hosts.ini
+    ├── site.yml
+    └── roles/
+        ├── common/
+        │   └── tasks/main.yml
+        ├── jenkins/
+        │   └── tasks/main.yml
+        ├── sonarqube/
+        │   └── tasks/main.yml
+        ├── nexus/
+        │   └── tasks/main.yml
+        └── kubernetes/
+            ├── tasks/master.yml
+            └── tasks/worker.yml

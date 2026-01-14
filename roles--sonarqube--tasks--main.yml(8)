@@ -1,0 +1,29 @@
+---
+- name: Installer Docker
+  apt:
+    name: docker.io
+    state: present
+    update_cache: yes
+
+- name: Activer Docker
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Répertoire SonarQube data
+  file:
+    path: /opt/sonarqube/data
+    state: directory
+    mode: "0755"
+
+- name: Lancer SonarQube
+  community.docker.docker_container:
+    name: sonarqube
+    image: sonarqube:lts-community
+    state: started
+    restart_policy: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - /opt/sonarqube/data:/opt/sonarqube/data

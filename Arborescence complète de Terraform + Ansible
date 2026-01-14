@@ -65,3 +65,102 @@ nano devops-platform/ansible/roles/sonarqube/tasks/main.yml
 nano devops-platform/ansible/roles/nexus/tasks/main.yml
 nano devops-platform/ansible/roles/kubernetes/tasks/master.yml
 nano devops-platform/ansible/roles/kubernetes/tasks/worker.yml
+
+
+POUR TERRAFORM
+bash
+cd devops-platform/terraform
+Initialiser Terraform (une fois, ou quand tu changes de provider/version) :
+
+bash
+terraform init
+(Optionnel mais conseillé) voir le plan :
+
+bash
+terraform plan
+Appliquer pour créer les ressources et générer les outputs (IP, etc.) :
+
+bash
+terraform apply
+# ou
+terraform apply -auto-approve
+Récupérer les IP pour Ansible :
+
+bash
+terraform output
+
+
+POUR ANSIBLE 
+
+Une fois que tu as rempli tous les fichiers Ansible, la suite est simple : **tester la connexion**, puis **lancer le playbook**.
+
+***
+
+## 1. Vérifier que tu peux joindre les serveurs
+
+1) Assure‑toi que `hosts.ini` contient bien les vraies IP de Terraform et `ansible_user=ubuntu`.
+
+2) Depuis ton PC :
+
+```bash
+cd ~/devops-platform/ansible
+
+# TEST : ping Ansible sur toutes les machines
+ansible -i hosts.ini all -m ping
+```
+
+- Si tout va bien : tu dois voir `SUCCESS` partout avec `pong`.  
+- Si tu as une erreur SSH, vérifie :
+  - que tu utilises la bonne clé privée (`~/.ssh/ma_cle_aws`),  
+  - et éventuellement ajoute `--private-key` :
+
+```bash
+ansible -i hosts.ini all -m ping --private-key ~/.ssh/ma_cle_aws
+```
+
+Si ça marche avec `--private-key`, tu pourras l’ajouter aussi pour le playbook.
+
+***
+
+## 2. Lancer le playbook Ansible pour tout installer
+
+Toujours dans `devops-platform/ansible` :
+
+```bash
+# Sans option (si ta clé est déjà utilisée par ssh-agent / config)
+ansible-playbook -i hosts.ini site.yml
+```
+
+Si tu avais besoin de `--private-key` :
+
+```bash
+ansible-playbook -i hosts.ini site.yml --private-key ~/.ssh/ma_cle_aws
+```
+
+- Ansible va :
+  - installer Docker + paquets de base sur tous les serveurs (role `common`),  
+  - installer et configurer Jenkins, SonarQube, Nexus,  
+  - installer Kubernetes v1.35 sur le master, init, Calico, Ingress,  
+  - récupérer la commande `join` et faire joindre automatiquement les workers.
+
+***
+
+## 3. Vérifier rapidement que tout est OK
+
+- Jenkins : navigateur → `http://IP_JENKINS:8080`  
+- SonarQube : `http://IP_SONAR:9000`  
+- Nexus : `http://IP_NEXUS:8081`  
+- Kubernetes :
+
+```bash
+ssh -i ~/.ssh/ma_cle_aws ubuntu@IP_MASTER
+kubectl get nodes
+```
+
+Tu dois voir le master + les workers en `Ready`.
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/collection_bd6234e5-daa5-4905-9e83-52cc6434916e/e4f95ce6-2124-40ae-8e09-af1df8eec870/DOC-20251027-WA0007.pdf)
+[2](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/133973014/c505ee3e-58b9-4131-a327-9e60e99f7e08/image.jpg)
+[3](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/133973014/8353b139-be22-4c9f-9f04-5e7f66a239af/image.jpg)
+[4](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/133973014/91261ac0-e458-4689-9ff3-b3ca15d82ac4/image.jpg)
+[5](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/133973014/aa5ef5fa-0502-4db9-87f4-787baa687604/image.jpg)

@@ -1,0 +1,16 @@
+---
+- name: Mise à jour APT
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Paquets de base
+  apt:
+    name:
+      - curl
+      - git
+      - apt-transport-https
+      - ca-certificates
+      - gnupg
+      - lsb-release
+    state: present

@@ -1,0 +1,36 @@
+---
+- name: Préparation commune
+  hosts: all
+  become: true
+  roles:
+    - common
+
+- name: Jenkins server
+  hosts: jenkins
+  become: true
+  roles:
+    - jenkins
+
+- name: SonarQube server
+  hosts: sonarqube
+  become: true
+  roles:
+    - sonarqube
+
+- name: Nexus server
+  hosts: nexus
+  become: true
+  roles:
+    - nexus
+
+- name: Kubernetes master
+  hosts: k8s_master
+  become: true
+  tasks:
+    - import_tasks: roles/kubernetes/tasks/master.yml
+
+- name: Kubernetes workers
+  hosts: k8s_workers
+  become: true
+  tasks:
+    - import_tasks: roles/kubernetes/tasks/worker.yml

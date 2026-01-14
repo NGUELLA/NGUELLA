@@ -1,0 +1,51 @@
+---
+- name: Désactiver swap
+  command: swapoff -a
+  when: ansible_swaptotal_mb | int > 0
+
+- name: Commenter swap dans fstab
+  replace:
+    path: /etc/fstab
+    regexp: '(^.*swap.*$)'
+    replace: '# \1'
+
+- name: Dépendances K8s
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+    state: present
+    update_cache: yes
+
+- name: Clé GPG Kubernetes
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Dépôt Kubernetes
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+
+- name: Installer kubeadm, kubelet, docker
+  apt:
+    name:
+      - docker.io
+      - kubelet
+      - kubeadm
+    state: present
+    update_cache: yes
+
+- name: Hold K8s
+  apt:
+    name:
+      - kubelet
+      - kubeadm
+    state: present
+    mark_hold: yes
+
+- name: Joindre le cluster
+  command: "{{ hostvars[groups['k8s_master'][0]].k8s_join_command }} --ignore-preflight-errors=all"
+  args:
+    creates: /etc/kubernetes/kubelet.conf

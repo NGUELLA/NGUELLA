@@ -18,3 +18,50 @@ devops-platform/
         └── kubernetes/
             ├── tasks/master.yml
             └── tasks/worker.yml
+
+
+
+# 1) Aller où tu veux créer le projet (par ex. ton HOME)
+cd ~
+
+# 2) Créer les dossiers
+mkdir -p devops-platform/terraform
+mkdir -p devops-platform/ansible
+mkdir -p devops-platform/ansible/roles/common/tasks
+mkdir -p devops-platform/ansible/roles/jenkins/tasks
+mkdir -p devops-platform/ansible/roles/sonarqube/tasks
+mkdir -p devops-platform/ansible/roles/nexus/tasks
+mkdir -p devops-platform/ansible/roles/kubernetes/tasks
+
+# 3) Créer les fichiers vides Terraform
+touch devops-platform/terraform/main.tf
+touch devops-platform/terraform/variables.tf
+touch devops-platform/terraform/outputs.tf
+
+# 4) Créer les fichiers vides Ansible
+touch devops-platform/ansible/hosts.ini
+touch devops-platform/ansible/site.yml
+touch devops-platform/ansible/roles/common/tasks/main.yml
+touch devops-platform/ansible/roles/jenkins/tasks/main.yml
+touch devops-platform/ansible/roles/sonarqube/tasks/main.yml
+touch devops-platform/ansible/roles/nexus/tasks/main.yml
+touch devops-platform/ansible/roles/kubernetes/tasks/master.yml
+touch devops-platform/ansible/roles/kubernetes/tasks/worker.yml
+
+# 5) Ouvrir les fichiers un par un avec nano pour coller le contenu
+
+# Fichiers Terraform
+nano devops-platform/terraform/main.tf
+nano devops-platform/terraform/variables.tf
+nano devops-platform/terraform/outputs.tf
+
+# Fichiers Ansible
+nano devops-platform/ansible/hosts.ini
+nano devops-platform/ansible/site.yml
+
+nano devops-platform/ansible/roles/common/tasks/main.yml
+nano devops-platform/ansible/roles/jenkins/tasks/main.yml
+nano devops-platform/ansible/roles/sonarqube/tasks/main.yml
+nano devops-platform/ansible/roles/nexus/tasks/main.yml
+nano devops-platform/ansible/roles/kubernetes/tasks/master.yml
+nano devops-platform/ansible/roles/kubernetes/tasks/worker.yml

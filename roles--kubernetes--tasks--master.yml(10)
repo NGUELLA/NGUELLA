@@ -9,24 +9,49 @@
     regexp: '(^.*swap.*$)'
     replace: '# \1'
 
-- name: Dépendances K8s
+- name: Installer dépendances système
   apt:
     name:
       - apt-transport-https
       - ca-certificates
       - curl
+      - gnupg
+      - lsb-release
     state: present
     update_cache: yes
 
-- name: Clé GPG Kubernetes
-  apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    state: present
+# ---------- dépôt Kubernetes stable v1.35 via pkgs.k8s.io ----------
 
-- name: Dépôt Kubernetes
-  apt_repository:
-    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
-    state: present
+- name: Créer le répertoire des keyrings s'il n'existe pas
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Télécharger et convertir la clé GPG Kubernetes v1.35
+  shell: |
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.35/deb/Release.key \
+      | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  args:
+    creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+- name: Donner les droits de lecture sur le keyring
+  file:
+    path: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    mode: "0644"
+
+- name: Ajouter le dépôt Kubernetes v1.35
+  copy:
+    dest: /etc/apt/sources.list.d/kubernetes.list
+    content: |
+      deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.35/deb/ /
+    mode: "0644"
+
+- name: Mettre à jour APT
+  apt:
+    update_cache: yes
+
+# ---------- installation Docker + kubeadm/kubelet/kubectl (v1.35) ----------
 
 - name: Installer kubeadm, kubelet, kubectl, docker
   apt:
@@ -36,9 +61,8 @@
       - kubeadm
       - kubectl
     state: present
-    update_cache: yes
 
-- name: Hold K8s
+- name: Marquer kubelet/kubeadm/kubectl en hold
   apt:
     name:
       - kubelet
@@ -47,12 +71,14 @@
     state: present
     mark_hold: yes
 
+# ---------- initialisation du cluster / Calico / Ingress ----------
+
 - name: Initialiser le cluster
   command: kubeadm init --pod-network-cidr=192.168.0.0/16
   args:
     creates: /etc/kubernetes/admin.conf
 
-- name: Config .kube
+- name: Créer le dossier .kube pour ubuntu
   file:
     path: /home/ubuntu/.kube
     state: directory
